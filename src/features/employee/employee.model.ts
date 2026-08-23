@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { BRAZILIAN_PHONE_NUMBER_REGEX, EMPLOYEE_ROLES } from './employee.constants';
 
 export interface EmployeeDocument extends Document {
     employeeId: string;
@@ -6,7 +7,7 @@ export interface EmployeeDocument extends Document {
     password?: string;
     email: string;
     phoneNumber: string;
-    role: 'admin' | 'doctor' | 'nurse' | 'receptionist';
+    role: typeof EMPLOYEE_ROLES[number];
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -32,26 +33,26 @@ const EmployeeModel: Schema = new Schema({
     email: {
         type: String,
         required: true,
+        // Intentionally a simpler backstop pattern than the DTO's z.email() -
+        // this is a defense-in-depth check, not the source of truth for email validity.
         match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     },
     phoneNumber: {
         type: String,
         required: true,
-        match: /^[1-9]{2}9[0-9]{8}$/
+        match: BRAZILIAN_PHONE_NUMBER_REGEX
     },
     role: {
         type: String,
-        enum: ['admin', 'doctor', 'nurse', 'receptionist'],
+        enum: EMPLOYEE_ROLES,
         required: true
     },
     isActive: {
         type: Boolean,
         default: true
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
     }
+}, {
+    timestamps: true
 });
 
 export const Employee = mongoose.model<EmployeeDocument>('Employee', EmployeeModel);

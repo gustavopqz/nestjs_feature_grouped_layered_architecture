@@ -1,4 +1,3 @@
-import { PostingOnDatabaseError } from '@/errors/postingOnDatabase.error';
 import bcrypt from 'bcryptjs';
 import { EmployeeCreateDTO, EmployeeFetchDTO } from "./employee.dto";
 import { EmployeeRepository } from "./employee.repository";
@@ -19,14 +18,17 @@ export class EmployeeService {
             password: passwordHashed
         }
 
-        const createEmployeeExecution = await this.repo.create(newEmployee);
+        const createdEmployee = await this.repo.create(newEmployee);
 
-        if (!createEmployeeExecution) throw new PostingOnDatabaseError('Error trying to create new employee.');
-
-        const response = {
-            ...employeeInfo,
-            createdAt: new Date(),
-            updatedAt: new Date()
+        const response: EmployeeFetchDTO = {
+            employeeId: createdEmployee.employeeId,
+            name: createdEmployee.name,
+            email: createdEmployee.email,
+            phoneNumber: createdEmployee.phoneNumber,
+            role: createdEmployee.role,
+            isActive: createdEmployee.isActive,
+            createdAt: createdEmployee.createdAt,
+            updatedAt: createdEmployee.updatedAt
         }
 
         return response;

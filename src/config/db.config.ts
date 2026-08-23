@@ -6,11 +6,11 @@ import mongoose from "mongoose";
 // Running dotend listening
 dotenv.config();
 
-const connectionString = process.env.MONGO_URI;
-
-if (!connectionString) throw new ConnectionStringNotFoundError();
-
 export const connectDB = async (): Promise<void> => {
+    const connectionString = process.env.MONGO_URI;
+
+    if (!connectionString) throw new ConnectionStringNotFoundError();
+
     try {
         await mongoose.connect(connectionString);
     } catch (error) {
