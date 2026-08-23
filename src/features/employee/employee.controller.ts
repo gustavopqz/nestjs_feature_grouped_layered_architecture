@@ -12,6 +12,8 @@ export class EmployeeController {
         this.employeeService = new EmployeeService(repo)
     }
     // Create
+    // NOTE: no auth middleware yet - this endpoint is open, so `role` (including "admin") is
+    // fully caller-controlled until auth is implemented (see README Known Limitations).
     public create = async (req: Request, res: Response) => {
         const result = employeeCreateSchema.safeParse(req.body);
 

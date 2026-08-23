@@ -18,7 +18,6 @@ The project is still in its early stages and will continue to grow over time wit
 - Vitest
 - Mongoose
 - bcryptjs
-- body-parser
 - cors
 - dotenv
 - tsx
@@ -49,7 +48,7 @@ This project has just started. The foundation is in place, and the following too
 - `Vitest` configured for testing, but feature tests are not built yet
 - `tsx` for fast TypeScript execution
 - `bcryptjs` for password hashing
-- `body-parser`, `cors`, and `dotenv` for middleware and environment config
+- `cors` and `dotenv` for middleware and environment config
 
 ## Run the Project
 
@@ -71,6 +70,17 @@ Run tests:
 pnpm test
 ```
 
+Build for production:
+
+```bash
+pnpm build
+pnpm start
+```
+
+## Known Limitations
+
+- There is no auth middleware yet (see Roadmap). This means `POST /api/v1/employee` currently accepts any `role`, including `admin`, from an unauthenticated caller. This is expected at this stage of the project and will be closed once auth is implemented.
+
 ## Roadmap
 
 ### Already implemented
@@ -85,7 +95,6 @@ pnpm test
 - [x] Feature-grouped layered architecture
 - [x] Mongoose
 - [x] bcryptjs
-- [x] body-parser
 - [x] cors
 - [x] dotenv
 - [x] tsx

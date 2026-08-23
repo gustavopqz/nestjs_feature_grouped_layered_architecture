@@ -1,6 +1,7 @@
 import z from "zod";
+import { BRAZILIAN_PHONE_NUMBER_REGEX, EMPLOYEE_ROLES } from "./employee.constants";
 
-const roleEnum = z.enum(["admin", "doctor", "nurse", "receptionist"], { error: 'Invalid role. Must be admin, doctor, nurse or receptionist' });
+const roleEnum = z.enum(EMPLOYEE_ROLES, { error: 'Invalid role. Must be admin, doctor, nurse or receptionist' });
 
 // Create Schema
 export const employeeCreateSchema = z.object({
@@ -8,12 +9,12 @@ export const employeeCreateSchema = z.object({
     name: z.string().min(2, 'Name is too short').transform(value => value.toUpperCase()),
     password: z.string().min(5, 'Password should have at least 5 caracteres'),
     email: z.email(),
-    phoneNumber: z.string().regex(/^[1-9]{2}9[0-9]{8}$/, { message: "Invalid Brazilian phone number" }),
+    phoneNumber: z.string().regex(BRAZILIAN_PHONE_NUMBER_REGEX, { message: "Invalid Brazilian phone number" }),
     role: z.string().transform(value => value.toLowerCase()).pipe(roleEnum),
     isActive: z.boolean().default(true)
 }).strict();
 
-// Update Schema 
+// Update Schema
 export const employeeUpdateSchema = employeeCreateSchema.partial();
 
 export const employeeFetchSchema = z.object({
@@ -21,7 +22,7 @@ export const employeeFetchSchema = z.object({
     name: z.string(),
     email: z.string(),
     phoneNumber: z.string(),
-    role: z.enum(["admin", "doctor", "nurse", "receptionist"]),
+    role: z.enum(EMPLOYEE_ROLES),
     isActive: z.boolean(),
     createdAt: z.date(),
     updatedAt: z.date(),

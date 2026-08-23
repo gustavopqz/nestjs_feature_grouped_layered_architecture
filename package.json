@@ -1,17 +1,20 @@
 {
-  "name": "hospital_management_system_feature_grouped_layered_architecture",
+  "name": "expressjs_feature_grouped_layered_architecture",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "test": "vitest",
-    "dev": "tsx watch --include src src/server.ts"
+    "dev": "tsx watch --include src src/server.ts",
+    "build": "tsup src/server.ts --out-dir dist --format cjs --clean",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.30.1",
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.6.0",
     "tsup": "^8.5.1",
@@ -20,7 +23,6 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
-    "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
