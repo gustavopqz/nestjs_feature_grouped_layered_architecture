@@ -19,4 +19,12 @@ export class EmployeeRepository {
     public async findAll(): Promise<EmployeeDocument[]> {
         return Employee.find();
     }
+
+    public async findByEmployeeIdWithPassword(employeeId: string): Promise<EmployeeDocument | null> {
+        return Employee.findOne({ employeeId }).select('+password');
+    }
+
+    public async adminExists(): Promise<boolean> {
+        return (await Employee.exists({ role: 'admin' })) !== null;
+    }
 }

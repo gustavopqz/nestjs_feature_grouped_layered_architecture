@@ -1,10 +1,14 @@
 import { connectDB } from '@/config/db.config';
+import authRouter from '@/features/auth/auth.routes';
 import employeeRouter from '@/features/employee/employee.routes';
+import { seedInitialAdmin } from '@/features/employee/employee.seed';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { DBConnectionError } from './errors/dbConnection.error';
+import { ForbiddenError } from './errors/forbidden.error';
 import { PostingOnDatabaseError } from './errors/postingOnDatabase.error';
+import { UnauthenticatedError } from './errors/unauthenticated.error';
 
 const routePrefix = '/api/v1'
 
@@ -46,6 +50,9 @@ async function startServer() {
         await connectDB();
         console.log('🌿 MongoDB connected succesfully');
 
+        await seedInitialAdmin();
+
+        app.use(`${routePrefix}/auth`, authRouter);
         app.use(`${routePrefix}/employee`, employeeRouter);
 
         app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
@@ -53,6 +60,14 @@ async function startServer() {
 
             if (err instanceof PostingOnDatabaseError) {
                 return res.status(409).json({ success: false, error: err.message });
+            }
+
+            if (err instanceof UnauthenticatedError) {
+                return res.status(401).json({ success: false, error: err.message });
+            }
+
+            if (err instanceof ForbiddenError) {
+                return res.status(403).json({ success: false, error: err.message });
             }
 
             return res.status(500).json({ success: false, error: 'Internal server error' });

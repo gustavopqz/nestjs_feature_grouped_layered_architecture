@@ -18,6 +18,7 @@ The project is still in its early stages and will continue to grow over time wit
 - Vitest
 - Mongoose
 - bcryptjs
+- jsonwebtoken
 - cors
 - dotenv
 - tsx
@@ -77,9 +78,12 @@ pnpm build
 pnpm start
 ```
 
-## Known Limitations
+## Auth
 
-- There is no auth middleware yet (see Roadmap). This means `POST /api/v1/employee` currently accepts any `role`, including `admin`, from an unauthenticated caller. This is expected at this stage of the project and will be closed once auth is implemented.
+- `POST /api/v1/auth/login` accepts `{ employeeId, password }` and returns a JWT (`{ token }`) on success.
+- `GET /api/v1/employee` requires a valid `Authorization: Bearer <token>` header.
+- `POST /api/v1/employee` additionally requires the caller's token to carry the `admin` role, so `role` can no longer be self-assigned by an unauthenticated caller.
+- On a fresh database with no `admin` employee yet, the server seeds one bootstrap admin at startup from the `SEED_ADMIN_*` environment variables (see `.env.example`) so the first login/creation is possible at all.
 
 ## Roadmap
 
@@ -99,12 +103,12 @@ pnpm start
 - [x] dotenv
 - [x] tsx
 - [x] tsup
+- [x] Auth Middleware (JWT login + role-based authorization)
 
 ### To Do
 
 - [ ] Pagination
-- [ ] Auth Middleware
-- [ ] New features (login, patient, queue)
+- [ ] New features (patient, queue)
 - [ ] File handling
 - [ ] Tests (Vitest configured, test suites not built yet)
 - [ ] Error handling in general
